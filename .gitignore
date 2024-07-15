@@ -1,0 +1,6 @@
+/target
+/migrations
+.env
+Makefile
+docker-compose.yml
+Dockerfile
