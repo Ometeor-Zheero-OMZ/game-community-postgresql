@@ -1,6 +1,6 @@
-use actix_web::web;
+use actix_web::web::{self, get, post, put, delete};
 
-use super::{
+use crate::controllers::{
     game::{
         create_game,
         delete_game,
@@ -14,6 +14,11 @@ use super::{
         get_user_by_id,
         get_users,
         update_user
+    },
+    jwt::{
+        public_view_handler,
+        get_token_handler,
+        secret_view_handler
     }
 };
 
@@ -32,6 +37,13 @@ pub fn config(conf: &mut web::ServiceConfig) {
         .service(update_user)
         .service(delete_user);
 
+    let auth_scope = web::scope("/auth")
+        .service(public_view_handler)
+        .service(get_token_handler)
+        .service(secret_view_handler);
+
     conf.service(game_scope);
     conf.service(user_scope);
+    conf.service(auth_scope);
+
 }
