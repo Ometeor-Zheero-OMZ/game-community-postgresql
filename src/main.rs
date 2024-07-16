@@ -1,3 +1,4 @@
+mod controllers;
 mod routes;
 mod models;
 mod middlewares;
@@ -8,7 +9,7 @@ use crate::middlewares::cors;
 use actix_web::{HttpServer, middleware::Logger, App};
 use sqlx::{Postgres, Pool, postgres::PgPoolOptions};
 use dotenv::dotenv;
-use routes::config::config;
+use routes::router::config;
 use utils::{DB_MSG, SET_ENV_MSG, SVR_MSG};
 
 pub struct AppState {
