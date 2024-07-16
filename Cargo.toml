@@ -3,6 +3,12 @@ name = "game-community-postgresql"
 version = "0.1.0"
 edition = "2021"
 
+[lints.rust]
+unsafe_code = "forbid"
+# 開発環境
+unused = "allow"
+
+
 [dependencies]
 actix-cors = "0.7.0"
 actix-web = "4.8.0"
@@ -13,4 +19,4 @@ lazy_static = "1.5.0"
 serde = { version = "1.0.204", features = ["derive"] }
 serde_json = "1.0.120"
 sqlx = { version = "0.7.4", features = ["runtime-async-std-native-tls", "postgres", "chrono", "uuid"] }
-uuid = { version = "1.10.0", features = ["serde", "v4"] }
+uuid = { version = "1.10.0", features = ["fast-rng", "serde", "v4", "v7"] }
