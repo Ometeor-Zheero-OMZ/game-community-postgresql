@@ -8,7 +8,7 @@ pub struct User {
     pub id: Uuid,
     pub username: String,
     pub email: String,
-    pub age: u32,
+    pub age: i32,
     pub password: String,
     pub created_at: Option<chrono::DateTime<chrono::Utc>>,
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
@@ -18,7 +18,7 @@ pub struct User {
 pub struct CreateUserSchema {
     pub username: String,
     pub email: String,
-    pub age: String,
+    pub age: i32,
     pub password: String,
 }
 
@@ -26,6 +26,6 @@ pub struct CreateUserSchema {
 pub struct UpdateUserSchema {
     pub username: Option<String>,
     pub email: Option<String>,
-    pub age: Option<String>,
+    pub age: Option<i32>,
     pub password: Option<String>
 }
