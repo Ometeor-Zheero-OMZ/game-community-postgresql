@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 #[derive(Debug, FromRow, Deserialize, Serialize)]
 #[allow(non_snake_case)]
-pub struct GameModel {
+pub struct Game {
     pub id: Uuid,
     pub field_name: String,
     pub address: String,

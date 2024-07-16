@@ -1,4 +1,4 @@
-use crate::models::game::{GameModel, CreateGameSchema, UpdateGameSchema};
+use crate::models::game::{Game, CreateGameSchema, UpdateGameSchema};
 use crate::AppState;
 
 use actix_web::{get, post, put, web, HttpResponse, Responder, delete};
@@ -8,7 +8,7 @@ use serde_json::json;
 #[get("")]
 pub async fn get_games(data: web::Data<AppState>) -> impl Responder {
     let query_result = sqlx::query_as!(
-        GameModel,
+        Game,
         "SELECT * FROM m_game"
     )
     .fetch_all(&data.db)
@@ -32,7 +32,7 @@ pub async fn get_games(data: web::Data<AppState>) -> impl Responder {
 #[post("/game")]
 async fn create_game(body: web::Json<CreateGameSchema>, data: web::Data<AppState>) -> impl Responder {
     let query_result = sqlx::query_as!(
-        GameModel,
+        Game,
         "INSERT INTO m_game (field_name, address, day) VALUES ($1, $2, $3) RETURNING *",
         body.field_name.to_string(),
         body.address.to_string(),
@@ -62,7 +62,7 @@ async fn create_game(body: web::Json<CreateGameSchema>, data: web::Data<AppState
 #[get("/game/{id}")]
 async fn get_game_by_id(path: web::Path<uuid::Uuid>, data: web::Data<AppState>) -> impl Responder {
     let game_id = path.into_inner();
-    let query_result = sqlx::query_as!(GameModel, "SELECT * FROM m_game WHERE id = $1", game_id)
+    let query_result = sqlx::query_as!(Game, "SELECT * FROM m_game WHERE id = $1", game_id)
         .fetch_one(&data.db)
         .await;
 
@@ -85,7 +85,7 @@ async fn get_game_by_id(path: web::Path<uuid::Uuid>, data: web::Data<AppState>) 
 async fn update_game(path: web::Path<uuid::Uuid>, data: web::Data<AppState>, body: web::Json<UpdateGameSchema>) -> impl Responder {
     let game_id = path.into_inner();
     // make sure game exists before updating
-    let query_result = sqlx::query_as!(GameModel, "SELECT * FROM m_game WHERE id = $1", game_id)
+    let query_result = sqlx::query_as!(Game, "SELECT * FROM m_game WHERE id = $1", game_id)
         .fetch_one(&data.db)
         .await;
 
@@ -99,7 +99,7 @@ async fn update_game(path: web::Path<uuid::Uuid>, data: web::Data<AppState>, bod
     let game = query_result.unwrap();
 
     let query_result = sqlx::query_as!(
-        GameModel,
+        Game,
         "UPDATE m_game SET field_name = $1, address = $2, day = $3, updated_at = $4 WHERE id = $5 RETURNING *",
         body.field_name.to_owned().unwrap_or(game.field_name),
         body.address.to_owned().unwrap_or(game.address),
@@ -129,7 +129,7 @@ async fn update_game(path: web::Path<uuid::Uuid>, data: web::Data<AppState>, bod
 async fn delete_game(path: web::Path<uuid::Uuid>, data: web::Data<AppState>) -> impl Responder {
     let game_id = path.into_inner();
 
-    let query_result = sqlx::query_as!(GameModel, "SELECT * FROM m_game WHERE id = $1", game_id)
+    let query_result = sqlx::query_as!(Game, "SELECT * FROM m_game WHERE id = $1", game_id)
     .fetch_one(&data.db)
     .await;
 
