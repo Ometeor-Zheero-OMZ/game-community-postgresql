@@ -1,4 +1,4 @@
-use crate::models::user::{UserModel, CreateUserSchema, UpdateUserSchema};
+use crate::models::user::{User, CreateUserSchema, UpdateUserSchema};
 use crate::AppState;
 
 use actix_web::{get, post, put, web, HttpResponse, Responder, delete};
@@ -8,7 +8,7 @@ use serde_json::json;
 #[get("")]
 pub async fn get_users(data: web::Data<AppState>) -> impl Responder {
     let query_result = sqlx::query_as!(
-        UserModel,
+        User,
         "SELECT * FROM m_user"
     )
     .fetch_all(&data.db)
@@ -32,9 +32,10 @@ pub async fn get_users(data: web::Data<AppState>) -> impl Responder {
 #[post("/user")]
 async fn create_user(body: web::Json<CreateUserSchema>, data: web::Data<AppState>) -> impl Responder {
     let query_result = sqlx::query_as!(
-        UserModel,
-        "INSERT INTO m_user (username, age, password) VALUES ($1, $2, $3) RETURNING *",
+        User,
+        "INSERT INTO m_user (username, email, age, password) VALUES ($1, $2, $3, $4) RETURNING *",
         body.username.to_string(),
+        body.email.to_string(),
         body.age.to_string(),
         body.password.to_string()
     )
@@ -62,7 +63,7 @@ async fn create_user(body: web::Json<CreateUserSchema>, data: web::Data<AppState
 #[get("/user/{id}")]
 async fn get_user_by_id(path: web::Path<uuid::Uuid>, data: web::Data<AppState>) -> impl Responder {
     let user_id = path.into_inner();
-    let query_result = sqlx::query_as!(UserModel, "SELECT * FROM m_user WHERE id = $1", user_id)
+    let query_result = sqlx::query_as!(User, "SELECT * FROM m_user WHERE id = $1", user_id)
         .fetch_one(&data.db)
         .await;
 
@@ -85,7 +86,7 @@ async fn get_user_by_id(path: web::Path<uuid::Uuid>, data: web::Data<AppState>) 
 async fn update_user(path: web::Path<uuid::Uuid>, data: web::Data<AppState>, body: web::Json<UpdateUserSchema>) -> impl Responder {
     let user_id = path.into_inner();
     // make sure user exists before updating
-    let query_result = sqlx::query_as!(UserModel, "SELECT * FROM m_user WHERE id = $1", user_id)
+    let query_result = sqlx::query_as!(User, "SELECT * FROM m_user WHERE id = $1", user_id)
         .fetch_one(&data.db)
         .await;
 
@@ -99,9 +100,10 @@ async fn update_user(path: web::Path<uuid::Uuid>, data: web::Data<AppState>, bod
     let user = query_result.unwrap();
 
     let query_result = sqlx::query_as!(
-        UserModel,
+        User,
         "UPDATE m_user SET username = $1, age = $2, password = $3, updated_at = $4 WHERE id = $5 RETURNING *",
         body.username.to_owned().unwrap_or(user.username),
+        body.email.to_owned().unwrap_or(user.email),
         body.age.to_owned().unwrap_or(user.age),
         body.password.to_owned().unwrap_or(user.password),
         now,
