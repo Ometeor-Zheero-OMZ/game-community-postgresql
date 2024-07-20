@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  rust:
+    container_name: game-community-rust
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/game-community-postgresql
+    working_dir: /game-community-postgresql
+    environment:
+      DATABASE_URL: "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_NAME}"
+    depends_on:
+      - db
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+
+  db:
+    container_name: game-community-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    volumes:
+      - db-store:/var/lib/postgresql/data
+
+volumes:
+  db-store:
