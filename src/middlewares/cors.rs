@@ -16,7 +16,8 @@ pub fn cors() -> Cors {
             header::AUTHORIZATION,
             header::ACCEPT,
         ])
-        .supports_credentials();
+        .supports_credentials()
+        .max_age(3600);
 
     cors
 }
