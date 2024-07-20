@@ -1,20 +1,22 @@
 version: "3.9"
 
 services:
-  rust:
-    container_name: game-community-rust
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/game-community-postgresql
-    working_dir: /game-community-postgresql
-    environment:
-      DATABASE_URL: "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_NAME}"
-    depends_on:
-      - db
-    ports:
-      - "${APP_PORT}:${APP_PORT}"
+  # rust:
+  #   container_name: game-community-rust
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - .:/game-community-postgresql
+  #   working_dir: /game-community-postgresql
+  #   environment:
+  #     DATABASE_URL: "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@localhost:5432/${DATABASE_NAME}"
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - "${APP_PORT}:${APP_PORT}"
+  #   networks:
+  #     - default
 
   db:
     container_name: game-community-db
@@ -27,6 +29,12 @@ services:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes:
       - db-store:/var/lib/postgresql/data
+    networks:
+      - default
 
 volumes:
   db-store:
+
+networks:
+  default:
+    driver: bridge

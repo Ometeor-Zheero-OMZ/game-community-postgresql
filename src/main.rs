@@ -50,11 +50,11 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .app_data(actix_web::web::Data::new(AppState {db: pool.clone()}))
-            // .configure(config)
+            .configure(config)
             .wrap(cors)
             .wrap(Logger::default())
     })
-    .bind("0.0.0.0:8080")?
+    .bind("127.0.0.1:8080")?
     .run()
     .await
 }
