@@ -1,0 +1,4 @@
+-- Add down migration script here
+DROP TABLE IF EXISTS m_game CASCADE;
+DROP TABLE IF EXISTS m_user CASCADE;
+DROP TABLE IF EXISTS t_score CASCADE;
