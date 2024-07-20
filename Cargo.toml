@@ -8,6 +8,10 @@ unsafe_code = "forbid"
 # 開発環境
 unused = "allow"
 
+[[bin]]
+name = "game-community-postgresql"
+path = "src/main.rs"
+
 
 [dependencies]
 actix-cors = "0.7.0"
