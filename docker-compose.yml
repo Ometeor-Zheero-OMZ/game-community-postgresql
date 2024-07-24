@@ -17,6 +17,7 @@ services:
   #     - "${APP_PORT}:${APP_PORT}"
   #   networks:
   #     - default
+  #   mem_limit: 500m 
 
   db:
     container_name: game-community-db
@@ -31,6 +32,7 @@ services:
       - db-store:/var/lib/postgresql/data
     networks:
       - default
+    mem_limit: 500m
 
 volumes:
   db-store:
