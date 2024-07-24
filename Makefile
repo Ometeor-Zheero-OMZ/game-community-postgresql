@@ -1,6 +1,6 @@
-DATABASE_DOCKER_CONTAINER=youtube_postgres_container
+DATABASE_DOCKER_CONTAINER=game-community-db
 
-DATABASE_URL=postgres://root:root@db:5432/db
+DATABASE_URL=postgres://root:root@localhost:5432/db
 
 DATABASE_NAME=db
 DATABASE_USER=root
@@ -58,6 +58,10 @@ up:
 down:
 	docker-compose down
 
+.PHONY: stop
+stop:
+	docker-compose stop
+
 .PHONY: restart
 restart:
 	docker-compose restart
@@ -72,7 +76,7 @@ exec:
 
 .PHONY: db
 db:
-	docker-compose exec ${DATABASE_DOCKER_CONTAINER} /bin/bash
+	docker exec -it ${DATABASE_DOCKER_CONTAINER} psql -U ${DATABASE_USER} -d ${DATABASE_NAME}
 
 .PHONY: app
 app:
