@@ -7,8 +7,8 @@ DATABASE_USER=root
 DATABASE_PASSWORD=root
 DATABASE_PORT=5432
 
-.PHONY: install
-install:
+.PHONY: i
+i:
 	cargo install cargo-edit
 	cargo add actix-web
 	cargo add actix-cors
@@ -23,6 +23,8 @@ install:
 	cargo add jsonwebtoken
 # SQLX-CLI
 	cargo install sqlx-cli
+# SeaORM
+	cargo add sea-orm --features sqlx-postgres,runtime-tokio-rustls,macros,debug-print,with-chrono,with-uuid,with-json
 
 # cargo
 .PHONY: run
